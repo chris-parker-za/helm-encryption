@@ -28,6 +28,7 @@ This utility makes some assumptions:
 ### Encrypt
 
 Encrypt an existing value.yaml file. Encrypted all keys starting with the word `encrypted` unless an alternative prefix is specified.
+The encryption key, by default, must be base64 encoded.
 
 `./helm-encyption.py --encrypt --path <path to helm chart> --key <aesKey>`
 
@@ -40,7 +41,7 @@ databaseCredentials:
  ```
    
 
-`/helm-encyption.py --encrypt --path /repo/my-helm-chart --key B&E)H@McQfTjWnZr4u7x!z%C*F-JaNdR`
+`/helm-encyption.py --encrypt --path /repo/my-helm-chart --key QiZFKUhATWNRZlRqV25acjR1N3gheiVDKkYtSmFOZFI=`
 
 Decrypted values files will be saved as `values.yaml.enc` at the path specified with `--path`
 
@@ -48,7 +49,7 @@ _**NOTE:** This tool will not re-encrypt previously encrypted values provided th
 
 ### Decrypt
 
-Decrypt an existing value.yaml file. Encrypted keys starting with the word `encrypted` will be decrypted unless an alternative prefix is specified.
+Decrypt an existing value.yaml file. Encrypted keys starting with the word `encrypted` will be decrypted unless an alternative prefix is specified. The decryption key, by default, must be base64 encoded.
 
 `./helm-encyption.py --decrypt --path <path to helm chart> --key <aesKey>`
 
@@ -56,7 +57,7 @@ Decrypted values files will be saved as `values.yaml.dec` at the path specified 
 
 **Example:**
 
-`/helm-encyption.py --decrypt --path /repo/my-helm-chart --key B&E)H@McQfTjWnZr4u7x!z%C*F-JaNdR`
+`/helm-encyption.py --decrypt --path /repo/my-helm-chart --key QiZFKUhATWNRZlRqV25acjR1N3gheiVDKkYtSmFOZFI=`
 
 ### Overwrite
 
@@ -69,6 +70,19 @@ The encryption operation generates a new file called `values.enc.yaml`. This is 
 A convenience function for removing all `.dec.yaml` and `.enc.yaml` files from the specified path.
 
 `/helm-encyption.py --clean --path <path to helm chart>`
+
+## Usage in your Helm chart
+
+Once you have an encrypted values file, the recommended way to pass the decryption key into your chart is using a `--set` statement.
+
+Example:
+
+`helm upgrade my-chart/ --set aesKey=QiZFKUhATWNRZlRqV25acjR1N3gheiVDKkYtSmFOZFI=`
+
+In your template files, the value can be decrypted as follows:
+
+`superSecret: {{ .Values.databaseCredentials.encryptedPassword | decryptAES (.Values.aesKey | b64dec)}}`
+
 
 ## Project Components
 
