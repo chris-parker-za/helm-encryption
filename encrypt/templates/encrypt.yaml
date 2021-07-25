@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: none
+data:
+{{ if eq .Values.decrypt "set" }}
+{{ $decodedKey := .Values.aesKey | b64dec }}
+{{ if kindIs "int64" .Values.encrypt}}
+{{ printf "encryptedSecret: %s" (encryptAES $decodedKey (.Values.encrypt | quote )) | indent 2 }}
+{{ else }}
+{{ printf "encryptedSecret: %s" (encryptAES $decodedKey (.Values.encrypt )) | indent 2 }}
+{{ end }}
+{{ else if eq .Values.encrypt "set" }}
+{{ $decodedKey := .Values.aesKey | b64dec }}
+{{ if kindIs "int64" .Values.decrypt}}
+{{ printf "decryptedSecret: %s" (.Values.decrypt | quote | decryptAES $decodedKey ) | indent 2 }}
+{{ else }}
+{{ printf "decryptedSecret: %s" (.Values.decrypt | decryptAES $decodedKey ) | indent 2 }}
+{{ end }}
+{{ end }}
