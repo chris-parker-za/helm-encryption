@@ -41,7 +41,7 @@ databaseCredentials:
  ```
    
 
-`/helm-encyption.py --encrypt --path /repo/my-helm-chart --key QiZFKUhATWNRZlRqV25acjR1N3gheiVDKkYtSmFOZFI=`
+`./helm-encyption.py --encrypt --path /repo/my-helm-chart --key QiZFKUhATWNRZlRqV25acjR1N3gheiVDKkYtSmFOZFI=`
 
 Decrypted values files will be saved as `values.yaml.enc` at the path specified with `--path`
 
@@ -57,19 +57,19 @@ Decrypted values files will be saved as `values.yaml.dec` at the path specified 
 
 **Example:**
 
-`/helm-encyption.py --decrypt --path /repo/my-helm-chart --key QiZFKUhATWNRZlRqV25acjR1N3gheiVDKkYtSmFOZFI=`
+`./helm-encyption.py --decrypt --path /repo/my-helm-chart --key QiZFKUhATWNRZlRqV25acjR1N3gheiVDKkYtSmFOZFI=`
 
 ### Overwrite
 
 The encryption operation generates a new file called `values.enc.yaml`. This is done so that the file can be reviewed. The existing values file may be replaced with the newly encrypted file manually or by using this overwrite command.
 
-`/helm-encyption.py --overwrite --path <path to helm chart>`
+`./helm-encyption.py --overwrite --path <path to helm chart>`
 
 #### Clean
 
 A convenience function for removing all `.dec.yaml` and `.enc.yaml` files from the specified path.
 
-`/helm-encyption.py --clean --path <path to helm chart>`
+`./helm-encyption.py --clean --path <path to helm chart>`
 
 ## Usage in your Helm chart
 
